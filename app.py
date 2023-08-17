@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import streamlit as st
 from icrawler.builtin import BingImageCrawler, GoogleImageCrawler
 
@@ -22,13 +24,13 @@ if btn:
             storage={'root_dir': '{}/{}'.format(DOWNLOAD_DIR, serch_text)})
         try:
             with st.spinner('Wait for it...'):
-                bing_crawler.crawl(keyword=serch_text,max_num=max_num)
+                bing_crawler.crawl(keyword=serch_text, max_num=max_num)
         except:
             st.error('Failed to get images from Bing.')
 
     if 'Google' in options:
         google_crawler = GoogleImageCrawler(
-            downloader_threads=4 ,
+            downloader_threads=4,
             storage={'root_dir': '{}/{}'.format(DOWNLOAD_DIR, serch_text)})
         try:
             with st.spinner('Wait for it...'):
