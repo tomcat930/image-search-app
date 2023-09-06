@@ -19,6 +19,22 @@ max_num = st.sidebar.number_input(label='Maximum number of images to acquire',
                                   value=100,
                                   help="Up to 500 sheets")
 
+bing_expander = st.expander("Bing filter options")
+bing_filters_type = bing_expander.radio(
+    "type", ["photo", "face", "clipart", "linedrawing", "animated"], horizontal=True)
+bing_filters_color = bing_expander.radio("color", ["color", "blackandwhite", "transparent", "red", "orange",
+                                         "yellow", "green", "teal", "blue", "purple", "pink", "white", "gray", "black", "brown"], horizontal=True)
+bing_filters_size = bing_expander.radio(
+    "size", ["large", "medium", "icon"], horizontal=True)
+bing_filters_license = bing_expander.radio("license", [
+                                           "noncommercial", "commercial", "noncommercial,modify", "commercial,modify"], horizontal=True)
+
+bing_filters = dict(
+    type=bing_filters_type,
+    color=bing_filters_color,
+    size=bing_filters_size,
+    license=bing_filters_license)
+
 if btn:
     if 'Bing' in options:
         bing_crawler = BingImageCrawler(
@@ -26,7 +42,9 @@ if btn:
             storage={'root_dir': image_dir})
         try:
             with st.spinner('Wait for it...'):
-                bing_crawler.crawl(keyword=serch_text, max_num=max_num)
+                bing_crawler.crawl(keyword=serch_text,
+                                   max_num=max_num,
+                                   filters=bing_filters)
         except:
             st.error('Failed to get images from Bing.')
 
@@ -55,17 +73,21 @@ if btn:
         cols = st.columns(4)
 
         if idx < len(fName_list):
-            cols[0].image(f'{image_dir}/{fName_list[idx]}', width=150, caption=fName_list[idx])
+            cols[0].image(f'{image_dir}/{fName_list[idx]}',
+                          width=150, caption=fName_list[idx])
             print(os.path.join(image_dir, fName_list[idx]))
             idx += 1
         if idx < len(fName_list):
-            cols[1].image(f'{image_dir}/{fName_list[idx]}', width=150, caption=fName_list[idx])
+            cols[1].image(f'{image_dir}/{fName_list[idx]}',
+                          width=150, caption=fName_list[idx])
             idx += 1
         if idx < len(fName_list):
-            cols[2].image(f'{image_dir}/{fName_list[idx]}', width=150, caption=fName_list[idx])
+            cols[2].image(f'{image_dir}/{fName_list[idx]}',
+                          width=150, caption=fName_list[idx])
             idx += 1
         if idx < len(fName_list):
-            cols[3].image(f'{image_dir}/{fName_list[idx]}', width=150, caption=fName_list[idx])
+            cols[3].image(f'{image_dir}/{fName_list[idx]}',
+                          width=150, caption=fName_list[idx])
             idx += 1
         else:
             break
