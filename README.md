@@ -2,7 +2,7 @@
 
 Search and download images using Streamlit and icrawler.
 
-<img src="./src/screen.png" />
+<img src="./src/screen.gif" />
 
 ## Installation
 
