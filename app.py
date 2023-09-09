@@ -6,7 +6,7 @@ from icrawler.builtin import BingImageCrawler, GoogleImageCrawler
 
 DOWNLOAD_DIR = './images'
 
-st.title('Image Searcher')
+st.title('🕵️‍♀️Image Searcher')
 serch_text = st.text_input(label='Search word', value='Dog')
 image_dir = '{}/{}'.format(DOWNLOAD_DIR, serch_text)
 btn = st.button('search')
@@ -19,21 +19,63 @@ max_num = st.sidebar.number_input(label='Maximum number of images to acquire',
                                   value=100,
                                   help="Up to 500 sheets")
 
-bing_expander = st.expander("Bing filter options")
-bing_filters_type = bing_expander.radio(
-    "type", ["photo", "face", "clipart", "linedrawing", "animated"], horizontal=True)
-bing_filters_color = bing_expander.radio("color", ["color", "blackandwhite", "transparent", "red", "orange",
-                                         "yellow", "green", "teal", "blue", "purple", "pink", "white", "gray", "black", "brown"], horizontal=True)
-bing_filters_size = bing_expander.radio(
-    "size", ["large", "medium", "icon"], horizontal=True)
-bing_filters_license = bing_expander.radio("license", [
-                                           "noncommercial", "commercial", "noncommercial,modify", "commercial,modify"], horizontal=True)
+bing_expander = st.sidebar.expander("Bing filter options")
+google_expander = st.sidebar.expander("Google filter options")
+
+
+# bing filter options
+bing_filters_type = bing_expander.multiselect(
+    label="Bing filters type",
+    options=["photo", "clipart", "linedrawing", "transparent", "animated"])
+bing_filters_color = bing_expander.multiselect(
+    label="Bing filters color",
+    options=["color", "blackandwhite", "red", "orange", "yellow", "green",
+             "teal", "blue", "purple", "pink", "white", "gray", "black", "brown"])
+bing_filters_size = bing_expander.multiselect(
+    label="Bing filters size",
+    options=["large", "medium", "small"])
+bing_filters_license = bing_expander.multiselect(
+    label="Bing filters license",
+    options=["creativecommons", "publicdomain", "noncommercial", "commercial",
+             "noncommercial,modify", "commercial,modify"])
+bing_filters_layout = bing_expander.multiselect(
+    label="Bing filters layout",
+    options=["square", "wide", "tall"])
+bing_filters_people = bing_expander.multiselect(
+    label="Bing filters people",
+    options=["face", "portrait"])
 
 bing_filters = dict(
     type=bing_filters_type,
     color=bing_filters_color,
     size=bing_filters_size,
-    license=bing_filters_license)
+    license=bing_filters_license,
+    layout=bing_filters_layout,
+    people=bing_filters_people)
+
+# google filter options
+google_filters_type = google_expander.multiselect(
+    label="Google filters type",
+    options=["photo", "face", "clipart", "linedrawing", "animated"])
+google_filters_color = google_expander.multiselect(
+    label="Google filters color",
+    options=["color", "blackandwhite", "transparent", "red", "orange",
+             "yellow", "green", "teal", "blue", "purple", "pink", "white",
+             "gray", "black", "brown"])
+google_filters_size = google_expander.multiselect(
+    label="Google filters size",
+    options=["large", "medium", "icon"])
+google_filters_license = google_expander.multiselect(
+    label="Google filters license",
+    options=["noncommercial", "commercial",
+             "noncommercial,modify", "commercial,modify"])
+
+google_filters = dict(
+    type=google_filters_type,
+    color=google_filters_color,
+    size=google_filters_size,
+    license=google_filters_license)
+
 
 if btn:
     if 'Bing' in options:
@@ -44,7 +86,8 @@ if btn:
             with st.spinner('Wait for it...'):
                 bing_crawler.crawl(keyword=serch_text,
                                    max_num=max_num,
-                                   filters=bing_filters)
+                                   filters=bing_filters
+                                   )
         except:
             st.error('Failed to get images from Bing.')
 
@@ -55,7 +98,9 @@ if btn:
         try:
             with st.spinner('Wait for it...'):
                 google_crawler.crawl(keyword=serch_text,
-                                     max_num=max_num)
+                                     max_num=max_num,
+                                     filters=google_filters
+                                     )
         except:
             st.error('Failed to get image from Google.')
 
